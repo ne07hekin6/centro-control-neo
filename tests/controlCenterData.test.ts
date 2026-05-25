@@ -4,12 +4,38 @@ import {
   mapProjects,
   mapRowsToObjects,
 } from "@/lib/controlCenterData";
-import { getDayDifference } from "@/lib/format";
+import { getDashboardFreshness, getDayDifference } from "@/lib/format";
 
 describe("date-based counters", () => {
   it("calculates reset-based counters inclusively", () => {
     const today = new Date(2026, 4, 14, 12);
     expect(getDayDifference("2026-05-11", today) + 1).toBe(4);
+  });
+});
+
+describe("dashboard freshness", () => {
+  const today = new Date(2026, 4, 25, 12);
+
+  it("does not warn when the dashboard state is from today", () => {
+    expect(getDashboardFreshness("2026-05-25", today).status).toBe("current");
+  });
+
+  it("reports stale data with the elapsed number of days", () => {
+    expect(getDashboardFreshness("2026-05-22", today)).toMatchObject({
+      status: "stale",
+      differenceDays: 3,
+    });
+  });
+
+  it("reports missing dates as unknown state", () => {
+    expect(getDashboardFreshness("", today).status).toBe("unknown");
+  });
+
+  it("reports future dates as inconsistent", () => {
+    expect(getDashboardFreshness("2026-05-27", today)).toMatchObject({
+      status: "future",
+      differenceDays: 2,
+    });
   });
 });
 

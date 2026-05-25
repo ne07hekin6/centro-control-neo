@@ -2,6 +2,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Header } from "@/components/layout/Header";
 import { CounterStrip } from "@/components/dashboard/CounterStrip";
 import { TodayPanel } from "@/components/dashboard/TodayPanel";
+import { DataFreshnessAlert } from "@/components/dashboard/DataFreshnessAlert";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { CheckinSummary } from "@/components/dashboard/CheckinSummary";
 import { TimelinePanel } from "@/components/dashboard/TimelinePanel";
@@ -11,11 +12,13 @@ import {
   getLatestClosure,
   getRelatedCounter,
 } from "@/lib/controlCenterData";
+import { getDashboardFreshness } from "@/lib/format";
 
 export default async function HomePage() {
   const data = await getControlCenterData();
   const latestCheckin = getLatestCheckin(data.dailyCheckins);
   const latestClosure = getLatestClosure(data.dailyCheckins);
+  const freshness = getDashboardFreshness(data.dashboardState.date);
 
   return (
     <AppShell timeline={data.updatesLog.slice(0, 8)}>
@@ -26,7 +29,12 @@ export default async function HomePage() {
           </div>
         ) : null}
 
-        <Header state={data.dashboardState} counters={data.counters} />
+        <Header
+          state={data.dashboardState}
+          counters={data.counters}
+          freshness={freshness}
+        />
+        <DataFreshnessAlert freshness={freshness} />
         <CounterStrip counters={data.counters} />
         <TodayPanel state={data.dashboardState} />
 

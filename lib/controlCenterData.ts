@@ -77,7 +77,7 @@ function mapDashboardState(rows: SheetMatrix): DashboardState {
   const record = mapRowsToObjects(rows)[0] ?? {};
 
   return {
-    date: record.date ?? mockControlCenterData.dashboardState.date,
+    date: record.date?.trim() ?? "",
     main_focus: record.main_focus ?? "",
     energy_physical: record.energy_physical ?? "",
     energy_mental: record.energy_mental ?? "",

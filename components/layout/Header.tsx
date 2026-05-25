@@ -1,5 +1,5 @@
 import { Activity, Gauge, Sparkles } from "lucide-react";
-import { formatDate } from "@/lib/format";
+import { formatDate, type DashboardFreshness } from "@/lib/format";
 import type { Counter, DashboardState } from "@/lib/types";
 
 function StatPill({
@@ -22,8 +22,29 @@ function StatPill({
   );
 }
 
-export function Header({ state, counters }: { state: DashboardState; counters: Counter[] }) {
+export function Header({
+  state,
+  counters,
+  freshness,
+}: {
+  state: DashboardState;
+  counters: Counter[];
+  freshness: DashboardFreshness;
+}) {
   const highlights = counters.slice(0, 2);
+  const freshnessBadge =
+    freshness.status === "current"
+      ? { text: "Actualizado hoy", tone: "border-green-400/20 bg-green-400/10 text-green-200" }
+      : freshness.status === "stale"
+        ? {
+            text: `Desactualizado hace ${freshness.differenceDays} ${
+              freshness.differenceDays === 1 ? "día" : "días"
+            }`,
+            tone: "border-amber-400/20 bg-amber-400/10 text-amber-200",
+          }
+        : freshness.status === "future"
+          ? { text: "Fecha inconsistente", tone: "border-red-400/20 bg-red-400/10 text-red-200" }
+          : { text: "Fecha desconocida", tone: "border-red-400/20 bg-red-400/10 text-red-200" };
 
   return (
     <header className="panel rounded-[28px] p-5">
@@ -34,8 +55,15 @@ export function Header({ state, counters }: { state: DashboardState; counters: C
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3">
             <h2 className="text-3xl font-semibold text-white">{state.main_focus}</h2>
+            <span
+              className={`rounded-full border px-3 py-1 text-xs font-medium ${freshnessBadge.tone}`}
+            >
+              {freshnessBadge.text}
+            </span>
           </div>
-          <p className="mt-3 text-sm text-slate-400">{formatDate(state.date)}</p>
+          {state.date ? (
+            <p className="mt-3 text-sm text-slate-400">{formatDate(state.date)}</p>
+          ) : null}
           <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300">
             {state.notes}
           </p>

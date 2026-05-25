@@ -19,6 +19,15 @@ const shortDateFormatter = new Intl.DateTimeFormat("es-AR", {
 
 type DateOnlyTimeStrategy = "midday" | "endOfDay" | "startOfDay";
 
+export type DashboardFreshnessStatus = "current" | "stale" | "unknown" | "future";
+
+export interface DashboardFreshness {
+  status: DashboardFreshnessStatus;
+  currentDate: Date;
+  registeredDate: Date | null;
+  differenceDays: number | null;
+}
+
 export function hasExplicitTime(value: string) {
   return /^\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}(?::\d{2})?$/.test(value.trim());
 }
@@ -95,8 +104,55 @@ export function getDayDifference(from: string, toDate = getTodayDashboardDate())
   return Math.floor(diffMs / 86_400_000);
 }
 
+export function getDashboardFreshness(
+  stateDate: string,
+  today = getTodayDashboardDate(),
+): DashboardFreshness {
+  if (!stateDate.trim()) {
+    return {
+      status: "unknown",
+      currentDate: today,
+      registeredDate: null,
+      differenceDays: null,
+    };
+  }
+
+  const registeredDate = parseSheetDateAsLocalDate(stateDate, {
+    dateOnlyTime: "midday",
+  });
+
+  if (Number.isNaN(registeredDate.getTime())) {
+    return {
+      status: "unknown",
+      currentDate: today,
+      registeredDate: null,
+      differenceDays: null,
+    };
+  }
+
+  const differenceDays = Math.floor(
+    (today.getTime() - registeredDate.getTime()) / 86_400_000,
+  );
+
+  return {
+    status:
+      differenceDays > 0
+        ? "stale"
+        : differenceDays < 0
+          ? "future"
+          : "current",
+    currentDate: today,
+    registeredDate,
+    differenceDays: Math.abs(differenceDays),
+  };
+}
+
 export function formatDate(date: string) {
   return dateFormatter.format(parseSheetDateAsLocalDate(date));
+}
+
+export function formatDateValue(date: Date) {
+  return dateFormatter.format(date);
 }
 
 export function formatDateTime(date: string) {
