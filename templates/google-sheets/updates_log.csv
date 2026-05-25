@@ -1,4 +1,0 @@
-timestamp,project_id,type,summary,details,mood,energy,source
-2026-05-25 09:20,ingresos,next_action,Propuesta prioritaria lista para enviar,El alcance quedó reducido a lo esencial para poder cerrar decisión esta semana.,enfocado,alta,manual
-2026-05-25 08:40,producto,milestone,Versión funcional preparada para prueba,La prueba busca fricciones operativas antes de sumar nuevas capacidades.,claro,alta,manual
-2026-05-24 18:00,operacion,daily_close,Revisión semanal completada,Se ordenaron próximos pasos y se movieron tareas sin impacto fuera del foco.,estable,media,manual

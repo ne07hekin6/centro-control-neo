@@ -1,4 +1,0 @@
-counter_id,label,type,start_date,reset_date,current_value,target_value,unit,auto_calculate,project_id,accent,last_updated,notes
-ventas_mes,Ventas del mes,manual,,,3,8,ventas,false,ingresos,amber,2026-05-25,Tres acuerdos confirmados durante el mes.
-sprint_actual,Día de sprint,date_based,2026-05-19,,,14,días,true,producto,cyan,2026-05-20,Se calcula desde la fecha de inicio.
-racha_revision,Racha de revisión,date_based,,2026-05-22,,21,días,true,operacion,green,2026-05-22,Se reinicia al registrar un nuevo comienzo.
