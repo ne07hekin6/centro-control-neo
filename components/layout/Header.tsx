@@ -35,7 +35,12 @@ export function Header({
   const freshnessBadge =
     freshness.status === "current"
       ? { text: "Actualizado hoy", tone: "border-green-400/20 bg-green-400/10 text-green-200" }
-      : freshness.status === "stale"
+      : freshness.status === "grace"
+        ? {
+            text: "Actualización de hoy pendiente",
+            tone: "border-slate-400/20 bg-slate-400/10 text-slate-300",
+          }
+        : freshness.status === "stale"
         ? {
             text: `Desactualizado hace ${freshness.differenceDays} ${
               freshness.differenceDays === 1 ? "día" : "días"

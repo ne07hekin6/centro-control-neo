@@ -17,22 +17,29 @@ describe("dashboard freshness", () => {
   const today = new Date(2026, 4, 25, 12);
 
   it("does not warn when the dashboard state is from today", () => {
-    expect(getDashboardFreshness("2026-05-25", today).status).toBe("current");
+    expect(getDashboardFreshness("2026-05-25", { today, currentHour: 9 }).status).toBe("current");
   });
 
-  it("reports stale data with the elapsed number of days", () => {
-    expect(getDashboardFreshness("2026-05-22", today)).toMatchObject({
+  it("keeps older data in a neutral grace state before midday", () => {
+    expect(getDashboardFreshness("2026-05-24", { today, currentHour: 11 })).toMatchObject({
+      status: "grace",
+      differenceDays: 1,
+    });
+  });
+
+  it("reports stale data with the elapsed number of days after midday", () => {
+    expect(getDashboardFreshness("2026-05-22", { today, currentHour: 12 })).toMatchObject({
       status: "stale",
       differenceDays: 3,
     });
   });
 
   it("reports missing dates as unknown state", () => {
-    expect(getDashboardFreshness("", today).status).toBe("unknown");
+    expect(getDashboardFreshness("", { today, currentHour: 9 }).status).toBe("unknown");
   });
 
   it("reports future dates as inconsistent", () => {
-    expect(getDashboardFreshness("2026-05-27", today)).toMatchObject({
+    expect(getDashboardFreshness("2026-05-27", { today, currentHour: 9 })).toMatchObject({
       status: "future",
       differenceDays: 2,
     });

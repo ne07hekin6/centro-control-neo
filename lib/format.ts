@@ -19,7 +19,12 @@ const shortDateFormatter = new Intl.DateTimeFormat("es-AR", {
 
 type DateOnlyTimeStrategy = "midday" | "endOfDay" | "startOfDay";
 
-export type DashboardFreshnessStatus = "current" | "stale" | "unknown" | "future";
+export type DashboardFreshnessStatus =
+  | "current"
+  | "grace"
+  | "stale"
+  | "unknown"
+  | "future";
 
 export interface DashboardFreshness {
   status: DashboardFreshnessStatus;
@@ -98,6 +103,18 @@ export function getTodayDashboardDate() {
   return new Date(Number(year), Number(month) - 1, Number(day), 12);
 }
 
+export function getCurrentDashboardHour(referenceDate = new Date()) {
+  const hour = new Intl.DateTimeFormat("en-US", {
+    timeZone: appConfig.timezone,
+    hour: "numeric",
+    hourCycle: "h23",
+  })
+    .formatToParts(referenceDate)
+    .find((part) => part.type === "hour")?.value;
+
+  return hour ? Number(hour) : referenceDate.getHours();
+}
+
 export function getDayDifference(from: string, toDate = getTodayDashboardDate()) {
   const fromDate = parseSheetDateAsLocalDate(from, { dateOnlyTime: "midday" });
   const diffMs = toDate.getTime() - fromDate.getTime();
@@ -106,7 +123,10 @@ export function getDayDifference(from: string, toDate = getTodayDashboardDate())
 
 export function getDashboardFreshness(
   stateDate: string,
-  today = getTodayDashboardDate(),
+  {
+    today = getTodayDashboardDate(),
+    currentHour = getCurrentDashboardHour(),
+  }: { today?: Date; currentHour?: number } = {},
 ): DashboardFreshness {
   if (!stateDate.trim()) {
     return {
@@ -137,7 +157,9 @@ export function getDashboardFreshness(
   return {
     status:
       differenceDays > 0
-        ? "stale"
+        ? currentHour < 12
+          ? "grace"
+          : "stale"
         : differenceDays < 0
           ? "future"
           : "current",

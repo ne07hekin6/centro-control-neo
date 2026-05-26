@@ -9,7 +9,7 @@ export function DataFreshnessAlert({
 }: {
   freshness: DashboardFreshness;
 }) {
-  if (freshness.status === "current") {
+  if (freshness.status === "current" || freshness.status === "grace") {
     return null;
   }
 
