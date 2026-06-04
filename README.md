@@ -44,7 +44,3 @@ El resultado es un tablero personal, sobrio y útil, diseñado para consultar to
 Una vez implementado, recibís un Centro de Control conectado a tu propia información, con estructura adaptada a tus frentes, indicadores y lenguaje de trabajo.
 
 La activación, la vinculación de datos, la personalización y la configuración de acceso forman parte de la entrega correspondiente y no se documentan en este repositorio público.
-
-## Alcance
-
-Este repositorio contiene la aplicación del dashboard. No incluye la landing comercial, la documentación privada de implementación ni los activos de configuración entregables al cliente.
