@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${appConfig.name} — Dashboard Template`,
+  title: appConfig.name,
   description: "Dashboard operativo conectado a Google Sheets.",
 };
 
