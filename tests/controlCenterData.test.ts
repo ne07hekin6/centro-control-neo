@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  getActiveProjects,
+  getArchivedProjects,
   getControlCenterDataUncached,
   mapProjects,
   mapRowsToObjects,
@@ -81,6 +83,48 @@ describe("project ordering", () => {
     const projects = mapProjects(rows);
 
     expect(projects.map((project) => project.project_id)).toEqual(["a", "b", "c", "d"]);
+  });
+});
+
+describe("project archiving", () => {
+  it("maps missing archived columns as active projects", () => {
+    const rows = [
+      ["project_id", "name", "status", "priority"],
+      ["legacy", "Proyecto legacy", "activo", "alta"],
+    ];
+
+    expect(mapProjects(rows)[0]).toMatchObject({
+      project_id: "legacy",
+      archived: false,
+      archived_at: "",
+      archived_reason: "",
+    });
+  });
+
+  it("maps TRUE archived projects without deleting their data", () => {
+    const rows = [
+      ["project_id", "name", "status", "priority", "archived", "archived_at", "archived_reason"],
+      ["old", "Proyecto viejo", "pausa", "baja", "TRUE", "2026-06-01", "Cerrado"],
+    ];
+
+    expect(mapProjects(rows)[0]).toMatchObject({
+      project_id: "old",
+      archived: true,
+      archived_at: "2026-06-01",
+      archived_reason: "Cerrado",
+    });
+  });
+
+  it("separates active projects from archived projects", () => {
+    const rows = [
+      ["project_id", "name", "status", "priority", "archived"],
+      ["active", "Proyecto activo", "activo", "alta", ""],
+      ["archived", "Proyecto archivado", "pausa", "baja", "TRUE"],
+    ];
+    const projects = mapProjects(rows);
+
+    expect(getActiveProjects(projects).map((project) => project.project_id)).toEqual(["active"]);
+    expect(getArchivedProjects(projects).map((project) => project.project_id)).toEqual(["archived"]);
   });
 });
 

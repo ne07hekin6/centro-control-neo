@@ -41,6 +41,9 @@ export interface Project {
   category: string;
   counter_id: string;
   accent: string;
+  archived: boolean;
+  archived_at: string;
+  archived_reason: string;
 }
 
 export interface Counter {
@@ -91,6 +94,7 @@ export interface ConfigEntry {
 export interface ControlCenterData {
   dashboardState: DashboardState;
   projects: Project[];
+  archivedProjects: Project[];
   counters: Counter[];
   updatesLog: UpdateLogEntry[];
   dailyCheckins: DailyCheckin[];

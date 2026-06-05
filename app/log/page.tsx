@@ -4,6 +4,7 @@ import { getControlCenterData } from "@/lib/controlCenterData";
 
 export default async function LogPage() {
   const data = await getControlCenterData();
+  const allProjects = [...data.projects, ...data.archivedProjects];
 
   return (
     <AppShell timeline={data.updatesLog.slice(0, 8)}>
@@ -16,7 +17,7 @@ export default async function LogPage() {
           </p>
         </section>
 
-        <LogFilters projects={data.projects} entries={data.updatesLog} />
+        <LogFilters projects={allProjects} entries={data.updatesLog} />
       </div>
     </AppShell>
   );

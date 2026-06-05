@@ -45,6 +45,11 @@ function toNullableNumber(value: string | undefined) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function toBoolean(value: string | undefined) {
+  const normalized = toCell(value).toLowerCase();
+  return ["true", "1", "yes", "si", "sí", "x"].includes(normalized);
+}
+
 export function mapRowsToObjects(rows: SheetMatrix) {
   const [headerRow = [], ...bodyRows] = rows;
   const headers = headerRow.map((header) => toCell(header));
@@ -103,8 +108,19 @@ export function mapProjects(rows: SheetMatrix): Project[] {
       category: record.category ?? "",
       counter_id: record.counter_id ?? "",
       accent: record.accent ?? "",
+      archived: toBoolean(record.archived),
+      archived_at: record.archived_at ?? "",
+      archived_reason: record.archived_reason ?? "",
     })),
   );
+}
+
+export function getActiveProjects(projects: Project[]) {
+  return projects.filter((project) => !project.archived);
+}
+
+export function getArchivedProjects(projects: Project[]) {
+  return projects.filter((project) => project.archived);
 }
 
 function getPriorityScore(priority: string) {
@@ -272,10 +288,12 @@ function mapConfig(rows: SheetMatrix): ConfigEntry[] {
 async function fetchSheetsData(): Promise<ControlCenterData> {
   const [dashboardRows, projectsRows, countersRows, updatesRows, checkinsRows, configRows] =
     await Promise.all(TAB_NAMES.map((tabName) => readGoogleSheetTab(tabName)));
+  const projects = mapProjects(projectsRows);
 
   return {
     dashboardState: mapDashboardState(dashboardRows),
-    projects: mapProjects(projectsRows),
+    projects: getActiveProjects(projects),
+    archivedProjects: getArchivedProjects(projects),
     counters: mapCounters(countersRows),
     updatesLog: mapUpdatesLog(updatesRows),
     dailyCheckins: mapDailyCheckins(checkinsRows),
@@ -297,6 +315,11 @@ export async function getControlCenterDataUncached(): Promise<ControlCenterData>
   } catch {
     return {
       ...mockControlCenterData,
+      projects: getActiveProjects(mockControlCenterData.projects),
+      archivedProjects: getArchivedProjects([
+        ...mockControlCenterData.projects,
+        ...mockControlCenterData.archivedProjects,
+      ]),
       counters: calculateCounters(mockControlCenterData.counters),
       generatedAt: new Date().toISOString(),
       warning: "Modo demo activo / configurá Google Sheets para usar tus datos",

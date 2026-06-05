@@ -15,7 +15,8 @@ export default async function ProjectDetailPage({
 }) {
   const { projectId } = await params;
   const data = await getControlCenterData();
-  const project = data.projects.find((entry) => entry.project_id === projectId);
+  const allProjects = [...data.projects, ...data.archivedProjects];
+  const project = allProjects.find((entry) => entry.project_id === projectId);
 
   if (!project) {
     notFound();

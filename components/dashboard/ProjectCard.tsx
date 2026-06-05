@@ -32,12 +32,23 @@ export function ProjectCard({
         <div className="flex flex-wrap justify-end gap-2">
           <StatusBadge label={project.status} tone={getStatusTone(project.status) as StatusTone} />
           <StatusBadge label={`Prioridad ${project.priority}`} tone={getPriorityTone(project.priority) as StatusTone} />
+          {project.archived ? <StatusBadge label="Archivado" tone="slate" /> : null}
         </div>
       </div>
 
       <p className="mt-4 text-sm leading-6 text-slate-200">{project.current_state}</p>
       {getProjectDisplayHints(project) ? (
         <p className="mt-4 text-sm leading-6 text-slate-400">{getProjectDisplayHints(project)}</p>
+      ) : null}
+      {project.archived ? (
+        <div className="mt-4 rounded-2xl border border-slate-400/14 bg-slate-400/8 p-4">
+          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">
+            Archivado{project.archived_at ? ` · ${formatDateTime(project.archived_at)}` : ""}
+          </p>
+          <p className="mt-2 text-sm leading-6 text-slate-300">
+            {project.archived_reason || "Sin motivo registrado."}
+          </p>
+        </div>
       ) : null}
 
       {relatedCounter ? (

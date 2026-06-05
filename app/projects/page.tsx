@@ -25,6 +25,33 @@ export default async function ProjectsPage() {
             />
           ))}
         </section>
+
+        {data.archivedProjects.length > 0 ? (
+          <section className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
+                  Archivados
+                </p>
+                <h2 className="mt-1 text-xl font-semibold text-white">
+                  Proyectos archivados
+                </h2>
+              </div>
+              <span className="rounded-full border border-slate-400/16 bg-slate-400/8 px-3 py-1 text-xs text-slate-300">
+                {data.archivedProjects.length}
+              </span>
+            </div>
+            <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-2">
+              {data.archivedProjects.map((project) => (
+                <ProjectCard
+                  key={project.project_id}
+                  project={project}
+                  relatedCounter={getRelatedCounter(data.counters, project)}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </AppShell>
   );
