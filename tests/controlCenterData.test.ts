@@ -27,6 +27,13 @@ describe("dashboard freshness", () => {
     });
   });
 
+  it("reports data older than yesterday as stale even before midday", () => {
+    expect(getDashboardFreshness("2026-05-22", { today, currentHour: 9 })).toMatchObject({
+      status: "stale",
+      differenceDays: 3,
+    });
+  });
+
   it("reports stale data with the elapsed number of days after midday", () => {
     expect(getDashboardFreshness("2026-05-22", { today, currentHour: 12 })).toMatchObject({
       status: "stale",

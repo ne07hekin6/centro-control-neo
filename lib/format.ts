@@ -157,7 +157,7 @@ export function getDashboardFreshness(
   return {
     status:
       differenceDays > 0
-        ? currentHour < 12
+        ? differenceDays === 1 && currentHour < 12
           ? "grace"
           : "stale"
         : differenceDays < 0
