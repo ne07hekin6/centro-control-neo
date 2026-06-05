@@ -4,6 +4,11 @@ import { getControlCenterData, getRelatedCounter } from "@/lib/controlCenterData
 
 export default async function ProjectsPage() {
   const data = await getControlCenterData();
+  const activeProjects = data.projects.filter((project) => !project.archived);
+  const archivedProjects = [
+    ...data.archivedProjects,
+    ...data.projects.filter((project) => project.archived),
+  ];
 
   return (
     <AppShell timeline={data.updatesLog.slice(0, 8)}>
@@ -17,7 +22,7 @@ export default async function ProjectsPage() {
         </section>
 
         <section className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-2">
-          {data.projects.map((project) => (
+          {activeProjects.map((project) => (
             <ProjectCard
               key={project.project_id}
               project={project}
@@ -26,7 +31,7 @@ export default async function ProjectsPage() {
           ))}
         </section>
 
-        {data.archivedProjects.length > 0 ? (
+        {archivedProjects.length > 0 ? (
           <section className="space-y-4">
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -38,11 +43,11 @@ export default async function ProjectsPage() {
                 </h2>
               </div>
               <span className="rounded-full border border-slate-400/16 bg-slate-400/8 px-3 py-1 text-xs text-slate-300">
-                {data.archivedProjects.length}
+                {archivedProjects.length}
               </span>
             </div>
             <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-2">
-              {data.archivedProjects.map((project) => (
+              {archivedProjects.map((project) => (
                 <ProjectCard
                   key={project.project_id}
                   project={project}

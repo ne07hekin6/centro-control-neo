@@ -329,7 +329,7 @@ export async function getControlCenterDataUncached(): Promise<ControlCenterData>
 
 export const getControlCenterData = unstable_cache(
   async () => getControlCenterDataUncached(),
-  ["control-center-data"],
+  ["control-center-data", "project-archive-support-v2"],
   { revalidate: 60 },
 );
 

@@ -19,6 +19,7 @@ export default async function HomePage() {
   const latestCheckin = getLatestCheckin(data.dailyCheckins);
   const latestClosure = getLatestClosure(data.dailyCheckins);
   const freshness = getDashboardFreshness(data.dashboardState.date);
+  const activeProjects = data.projects.filter((project) => !project.archived);
 
   return (
     <AppShell timeline={data.updatesLog.slice(0, 8)}>
@@ -41,7 +42,7 @@ export default async function HomePage() {
         <section className="grid gap-4 2xl:grid-cols-[minmax(0,1fr)_360px]">
           <div className="space-y-4">
             <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-2">
-              {data.projects.map((project) => (
+              {activeProjects.map((project) => (
                 <ProjectCard
                   key={project.project_id}
                   project={project}
