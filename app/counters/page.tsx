@@ -3,6 +3,9 @@ import { CounterStrip } from "@/components/dashboard/CounterStrip";
 import { formatDateTime } from "@/lib/format";
 import { getControlCenterData } from "@/lib/controlCenterData";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function CountersPage() {
   const data = await getControlCenterData();
   const historicalHints = data.updatesLog.filter((entry) =>

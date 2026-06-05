@@ -14,6 +14,9 @@ import {
 } from "@/lib/controlCenterData";
 import { getDashboardFreshness } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function HomePage() {
   const data = await getControlCenterData();
   const latestCheckin = getLatestCheckin(data.dailyCheckins);

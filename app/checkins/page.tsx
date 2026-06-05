@@ -3,6 +3,9 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { formatDate, formatUpdateTypeTag } from "@/lib/format";
 import { getControlCenterData } from "@/lib/controlCenterData";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function CheckinsPage() {
   const data = await getControlCenterData();
 

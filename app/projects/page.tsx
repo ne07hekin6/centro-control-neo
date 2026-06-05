@@ -2,6 +2,9 @@ import { AppShell } from "@/components/layout/AppShell";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { getControlCenterData, getRelatedCounter } from "@/lib/controlCenterData";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function ProjectsPage() {
   const data = await getControlCenterData();
   const activeProjects = data.projects.filter((project) => !project.archived);

@@ -2,6 +2,9 @@ import { AppShell } from "@/components/layout/AppShell";
 import { LogFilters } from "@/components/log/LogFilters";
 import { getControlCenterData } from "@/lib/controlCenterData";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function LogPage() {
   const data = await getControlCenterData();
   const allProjects = [...data.projects, ...data.archivedProjects];

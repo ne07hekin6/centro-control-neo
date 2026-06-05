@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import {
   getDayDifference,
   getTodayDashboardDate,
@@ -327,11 +326,9 @@ export async function getControlCenterDataUncached(): Promise<ControlCenterData>
   }
 }
 
-export const getControlCenterData = unstable_cache(
-  async () => getControlCenterDataUncached(),
-  ["control-center-data", "project-archive-support-v2"],
-  { revalidate: 60 },
-);
+export async function getControlCenterData() {
+  return getControlCenterDataUncached();
+}
 
 export function getProjectUpdates(
   updates: UpdateLogEntry[],
