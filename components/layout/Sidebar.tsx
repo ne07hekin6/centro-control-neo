@@ -4,6 +4,7 @@ import {
   BarChart3,
   ClipboardList,
   LayoutDashboard,
+  LogOut,
   ListTodo,
   Menu,
   RadioTower,
@@ -22,7 +23,7 @@ const navItems = [
 
 export function Sidebar() {
   return (
-    <aside className="panel-muted hidden min-h-screen border-r border-white/10 p-3 md:flex md:flex-col md:items-center xl:items-stretch xl:p-4">
+    <aside className="panel-muted sticky top-0 hidden h-screen self-start border-r border-white/10 p-3 md:flex md:flex-col md:items-center xl:items-stretch xl:p-4">
       <div className="mb-8 hidden px-2 xl:block">
         <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300/80">
           Centro de Control
@@ -54,24 +55,29 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="mt-auto hidden rounded-2xl border border-slate-800 bg-slate-950/60 p-4 xl:block">
-        <div className="mb-2 flex items-center gap-2 text-slate-300">
-          <ListTodo className="h-4 w-4 text-cyan-300" />
-          <span className="text-sm font-medium">Regla de lectura</span>
-        </div>
-        <p className="text-sm leading-6 text-slate-400">
-          Este tablero ayuda a decidir. El historial no manda sobre el presente.
-        </p>
+      <div className="mt-auto w-full space-y-3">
         {isAccessProtectionEnabled() ? (
-          <form action={logoutAction} className="mt-4">
+          <form action={logoutAction}>
             <button
               type="submit"
-              className="w-full rounded-2xl border border-white/10 px-3 py-2 text-sm text-slate-300 transition hover:border-cyan-400/20 hover:bg-cyan-400/10 hover:text-white"
+              title="Cerrar acceso"
+              aria-label="Cerrar acceso"
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 text-sm text-slate-300 transition hover:border-cyan-400/20 hover:bg-cyan-400/10 hover:text-white xl:h-auto xl:w-full xl:gap-2 xl:px-3 xl:py-2"
             >
-              Cerrar acceso
+              <LogOut className="h-4 w-4 shrink-0" />
+              <span className="hidden xl:inline">Cerrar acceso</span>
             </button>
           </form>
         ) : null}
+        <div className="hidden rounded-2xl border border-slate-800 bg-slate-950/60 p-4 xl:block">
+          <div className="mb-2 flex items-center gap-2 text-slate-300">
+            <ListTodo className="h-4 w-4 text-cyan-300" />
+            <span className="text-sm font-medium">Regla de lectura</span>
+          </div>
+          <p className="text-sm leading-6 text-slate-400">
+            Este tablero ayuda a decidir. El historial no manda sobre el presente.
+          </p>
+        </div>
       </div>
     </aside>
   );
